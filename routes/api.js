@@ -18,7 +18,6 @@ module.exports = function (app) {
       !/[a-i]/i.test(row) ||
       !/[1-9]/i.test(column)
     ) {
-      console.log("invalid coordinate :>> ");
       res.json({ error: "Invalid coordinate" });
       return;
     }
@@ -32,6 +31,15 @@ module.exports = function (app) {
     }
     if (/[^0-9.]/g.test(puzzle)) {
       res.json({ error: "Invalid characters in puzzle" });
+      return;
+    }
+    if (!/^[1-9]$/.test(value)) {
+      res.json({ error: "Invalid value" });
+      return;
+    }
+    let index = (solver.letterToNumber(row) - 1) * 9 + (+column - 1);
+    if (puzzle[index] == value) {
+      res.json({ valid: true });
       return;
     }
     let validCol = solver.checkColPlacement(puzzle, row, column, value);
